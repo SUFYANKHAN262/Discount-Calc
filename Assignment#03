@@ -1,0 +1,173 @@
+import React,{useState} from 'react';
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  Text,
+  Button,
+
+} from 'react-native';
+
+
+
+const App= () =>
+{
+  const [Price, setPrice]=useState(' ');
+  const [Discount,setDiscount]=useState(false);
+  const [SavePrice, setSavePrice]=useState(false);
+  const [History, setHistory]=useState([
+    
+  ]);
+  
+  const addHistory = ()=>{
+    setHistory( prevHistory =>{
+      return [{Oprice:Price,discount:Discount,Fprice:(Price-((Price*(Discount/100)).toFixed(2))).toFixed(2)},...prevHistory]
+    })
+  }
+  const onchangePrice = textValue=> {
+  
+    
+      if(!textValue)
+    {
+      setDiscount(false);
+    }
+    else
+    {
+      setDiscount(true);
+    }
+    setPrice(textValue); 
+    
+    
+    
+    
+    
+  }
+  const onchangeDiscount= textValue =>{
+    
+    if(!textValue)
+    {
+      setSavePrice(false);
+    }
+    else if(textValue>101)
+    {
+      alert("Please Enter Amount less than 100");
+      setDiscount(false)
+      
+    }
+    else if(textValue<101){
+      setSavePrice(true);
+      setDiscount(textValue);
+    }
+    
+  }
+  
+  
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.text} >Discount Calculator</Text>
+      </View>
+      
+      <View style={styles.desgin}>
+
+      
+      <View style={styles.rowDesign} >
+        <Text>Original Price</Text>
+        <TextInput style={styles.textInput} 
+        placeholder="Enter Price" 
+        keyboardType={'numeric'}
+        onChangeText={onchangePrice}/>
+      </View>
+      <View style={styles.rowDesign}>
+        {Discount && 
+        <Text >   Discount %  </Text>
+        }
+        
+        {Discount && 
+        
+        <TextInput style={styles.textInput}
+        placeholder="Enter Discount"
+        keyboardType={'number-pad'}
+        maxLength={3}
+        onChangeText={onchangeDiscount}
+        ></TextInput>}
+       </View>
+            
+      {SavePrice && 
+      <Text>Save Price: {(Price*(Discount/100)).toFixed(2)}</Text>}
+      {SavePrice &&
+      <Text>After Discount: {(Price-((Price*(Discount/100)).toFixed(2))).toFixed(2)}</Text>} 
+
+
+      {SavePrice &&
+      <Button title="Save" style={styles.btnStyle} onPress={addHistory} ></Button>}             
+      <Text>List Size: {History.length}</Text>
+
+      </View>
+      
+      
+      
+     
+      
+      
+      
+    </View>
+
+  );
+
+}
+
+
+
+const styles = StyleSheet.create({
+  container:{
+    flex:1,
+    
+    
+  },
+  desgin:
+  {
+    justifyContent:'center',
+    alignItems:'center'
+
+  },
+  rowDesign:{
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-around'
+    
+
+  },
+  textInput: {
+   borderWidth:3,
+   padding:10,
+   width:'70%',
+   margin:10,
+   borderRadius:10
+  },
+  btnStyle:{
+    marginTop:2
+    
+  },
+  header: {
+    height:60,
+    padding:15,
+    backgroundColor: 'darkslateblue' 
+  
+  },
+  text: {
+      color:'white',
+      fontSize: 23,
+      textAlign: 'center'
+  }
+  
+  
+ 
+  
+});
+
+export default App;
